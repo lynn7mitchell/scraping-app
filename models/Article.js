@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-var Article = new Schema({
+var ArticleSchema = new Schema({
     headline: String,
-    summary: String,
     URL: String
 })
 
-var Article = mongoose.model("Article", ArticleSchema);
+const Article = mongoose.model("Article", ArticleSchema);
 
 module.exports = Article;
