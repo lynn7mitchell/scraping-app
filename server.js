@@ -33,6 +33,11 @@ db = require("./models")
 // Connect to the Mongo DB
 mongoose.connect("mongodb://heroku_2qd6pnnl:bk47dscj8t88j7r9bndn6dlc5k@ds257507.mlab.com:57507/heroku_2qd6pnnl", { useNewUrlParser: true });
 
+// If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+
+mongoose.connect(MONGODB_URI ,{ useNewUrlParser: true });
+
 
 
 
