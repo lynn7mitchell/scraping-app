@@ -1,6 +1,7 @@
 var express = require("express");
 var mongoose = require("mongoose");
-
+var exphbs = require("express-handlebars");
+var path = require("path");
 var logger = require("morgan");
 
 // Our scraping tools
@@ -32,9 +33,28 @@ db = require("./models")
 // Connect to the Mongo DB
 mongoose.connect("mongodb://heroku_2qd6pnnl:bk47dscj8t88j7r9bndn6dlc5k@ds257507.mlab.com:57507/heroku_2qd6pnnl", { useNewUrlParser: true });
 
+
+
+
+// Handlebars
+var viewsPath = path.join(__dirname, 'views');
+var layoutsPath = path.join(viewsPath, 'layouts');
+app.set('views', viewsPath);
+
+var exphbsConfig = exphbs.create({
+  defaultLayout: 'main',
+  layoutsDir: layoutsPath,
+  extname: '.handlebars'
+});
+
+
+
+app.engine('handlebars', exphbsConfig.engine);
+app.set('view engine', '.handlebars');
+
 // Routes
 require("./routes/apiRoutes")(app);
-// require("./routes/htmlRoutes")(app);
+require("./routes/htmlRoutes")(app);
 
 // Start the server
 app.listen(PORT, function() {
