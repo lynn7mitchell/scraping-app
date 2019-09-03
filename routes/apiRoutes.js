@@ -18,11 +18,11 @@ module.exports = function (app) {
     console.log(err)
   });
 
-    axios.get("https://www.polygon.com/news").then(function(response) {
+  axios.get("https://www.polygon.com/news").then(function(response) {
       var $ = cheerio.load(response.data);
     $(".c-entry-box--compact__body h2").each(function(i, element) {
         var result = {};
-      result.title = $(this)
+      result.headline = $(this)
         .children("a")
         .text();
       result.URL = $(this)
