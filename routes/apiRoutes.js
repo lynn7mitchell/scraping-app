@@ -10,7 +10,7 @@ var cheerio = require("cheerio");
 
 
 db = require("../models")
-console.log(db)
+// console.log(db)
 
 module.exports = function (app) {
 
@@ -34,7 +34,7 @@ module.exports = function (app) {
     .then(function(dbArticle) {
       // View the added result in the console
       // res.json(dbArticle)
-      console.log(dbArticle);
+      // console.log(dbArticle);
     })
     .catch(function(err) {
       // If an error occurred, log it
@@ -48,10 +48,10 @@ module.exports = function (app) {
 
   // Route for getting all Articles from the db
   app.get("/api/articles", function(req, res) {
-    console.log("kn;skadf")
     // Grab every document in the Articles collection
-    db.Article.find({})
+    db.Article.find()
       .then(function(dbArticle) {
+        console.log("khdfjkasf", dbArticle)
         // If we were able to successfully find Articles, send them back to the client
         res.json(dbArticle);
       })
