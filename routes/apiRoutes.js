@@ -14,51 +14,62 @@ db = require("../models")
 
 module.exports = function (app) {
 
-  db.Article.deleteMany({}).catch(function(err){
-    console.log(err)
-  });
+  // Scrape
+  app.get("/api/scrape", function (req, res) {
 
-  axios.get("https://www.polygon.com/news").then(function(response) {
-      var $ = cheerio.load(response.data);
-    $(".c-entry-box--compact__body h2").each(function(i, element) {
-        var result = {};
-      result.headline = $(this)
-        .children("a")
-        .text();
-      result.URL = $(this)
-        .children("a")
-        .attr("href");
-    ;
-    
-    db.Article.create(result)
-    .then(function(dbArticle) {
-      // View the added result in the console
-      // res.json(dbArticle)
-      // console.log(dbArticle);
-    })
-    .catch(function(err) {
-      // If an error occurred, log it
-      console.log(err);
+    // Delete everythin in the article collection
+    db.Article.deleteMany({}).catch(function (err) {
+      console.log(err)
     });
-  });
-  
-      // Send a message to the client
-    //   res.send("Scrape Complete");
-   
 
-  // Route for getting all Articles from the db
-  app.get("/api/articles", function(req, res) {
-    // Grab every document in the Articles collection
-    db.Article.find()
-      .then(function(dbArticle) {
-        console.log("khdfjkasf", dbArticle)
-        // If we were able to successfully find Articles, send them back to the client
-        res.json(dbArticle);
-      })
-      .catch(function(err) {
-        // If an error occurred, send it to the client
-        res.json(err);
+    // Scrape the website polygon.com/news using cheerio.js package
+    axios.get("https://www.polygon.com/news").then(function (response) {
+      var $ = cheerio.load(response.data);
+
+      // Grab all h2 elements with the class listed
+      $(".c-entry-box--compact__body h2").each(function (i, element) {
+        var result = {};
+
+        // Take result above and create a document to go to the database
+        result.headline = $(this)
+          .children("a")
+          .text();
+        result.URL = $(this)
+          .children("a")
+          .attr("href");;
+
+        // Create article using schema from the article.js file in the models folder
+        db.Article.create(result)
+          .then(function (dbArticle) {
+            // Add article to database
+            res.json(dbArticle)
+          })
+          .catch(function (err) {
+            // If an error occurred, log it
+            console.log(err);
+          });
       });
-  });
- 
-    })}
+    });
+
+    // Route for getting all Articles from the db
+    app.get("/api/articles", function (req, res) {
+      // Grab every document in the Articles collection
+      db.Article.find()
+        .then(function (dbArticle) {
+          console.log("khdfjkasf", dbArticle)
+          // If we were able to successfully find Articles, send them back to the client
+          res.json(dbArticle);
+        })
+        .catch(function (err) {
+          // If an error occurred, send it to the client
+          res.json(err);
+        });
+    });
+
+    // use app.post to post article to database when saved is clicked
+    app.post("/api/saved", function(req, res){
+      
+    })
+
+  })
+}
