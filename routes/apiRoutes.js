@@ -66,7 +66,7 @@ module.exports = function (app) {
         });
     });
 
-    // use app.post to post article to database when saved is clicked
+    
     app.post("/api/saved", function(req, res){
       
     })
